@@ -1,0 +1,64 @@
+/*
+ Given two strings s and t, write a function to determine if t is an anagram of s.
+
+For example,
+s = "anagram", t = "nagaram", return true.
+s = "rat", t = "car", return false.
+
+
+*****VIVEK RAMJI*****
+*/
+
+
+public class Solution {
+    public boolean isAnagram(String s, String t) {
+        
+        if(s.length() != t.length())
+        {
+            return false;
+        }
+        
+        int x = 0;
+        HashMap<Character, Integer> myMap = new HashMap<Character, Integer>();
+        
+        for(int i = 0; i < s.length(); i++)
+        {
+            if(myMap.containsKey(s.charAt(i)))
+            {
+             x = myMap.get(s.charAt(i));
+             x++;
+             myMap.put(s.charAt(i), x);
+            }
+            else
+            {
+                myMap.put(s.charAt(i), 1);
+            }
+        }
+        
+         for(int i = 0; i < t.length(); i++)
+        {
+            if(myMap.containsKey(t.charAt(i)))
+            {
+             x = myMap.get(t.charAt(i));
+             x--;
+             myMap.put(t.charAt(i), x);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        Iterator it = myMap.entrySet().iterator();
+        while(it.hasNext())
+        {
+            Map.Entry pair = (Map.Entry)it.next();
+            if((Integer)pair.getValue() > 0)
+            {
+                return false;
+            }
+        }
+        
+      return true;  
+    }
+}

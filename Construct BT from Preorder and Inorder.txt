@@ -1,0 +1,49 @@
+/*
+ * Given preorder and inorder traversal of a tree, construct the binary tree.
+ *
+ * Note:
+ * You may assume that duplicates do not exist in the tree.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        
+        Map<Integer, Integer> inorderMap = new HashMap<Integer, Integer>();
+        
+        if(preorder.length == 0 || inorder.length == 0 || preorder == null || inorder == null)
+        {
+            return null;
+        }
+        for(int i = 0; i < inorder.length; i++)
+        {
+            inorderMap.put(inorder[i], i);
+        }
+        
+        return buildTreeUtility(0, 0, inorder.length-1, preorder, inorder, inorderMap);
+    }
+    
+    public TreeNode buildTreeUtility(int preIndex, int inOrderStart, int inOrderEnd, int[] preOrder, int[] inOrder, Map<Integer, Integer> inorderMap)
+    {
+        if(preIndex > preOrder.length-1 || inOrderStart > inOrderEnd)
+        {
+            return null;
+        }
+        
+        TreeNode newNode = new TreeNode(preOrder[preIndex]);
+        int index = inorderMap.get(preOrder[preIndex]);
+        
+        newNode.left = buildTreeUtility(preIndex+1, inOrderStart, index-1, preOrder, inOrder, inorderMap);
+        newNode.right = buildTreeUtility(preIndex+index-inOrderStart+1, index+1, inOrderEnd, preOrder, inOrder, inorderMap);
+        return newNode;
+        
+    }
+}

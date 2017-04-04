@@ -1,0 +1,124 @@
+/*
+ *Implement strStr().
+ *
+ *Returns the index of the first occurrence of needle in haystack, or -1
+ *if needle is not part of haystack.
+*/
+
+public class Solution {
+    public int strStr(String haystack, String needle) {
+        
+        if(needle.length() == 0 && haystack.length() == 0)
+        {
+            return 0; 
+        }
+        
+        if(needle.length() == 0 && haystack.length() != 0)
+        {
+            return 0; 
+        }
+        
+        if(needle.length() != 0 && haystack.length() == 0)
+        {
+            return -1; 
+        }
+        
+        
+        if(needle.length() > haystack.length() || needle == null || haystack == null)
+        {
+            return -1;
+        }
+        
+        int[] preProcessed = preProcessNeedle(needle);
+        
+        int solutionIndex = findNeedle(haystack, needle, preProcessed);
+        
+        return solutionIndex;
+        
+    }
+    
+    public int findNeedle(String haystack, String needle, int[] array)
+    {
+        int i = 0;
+        int j = 0;
+        int startIndex = -1;
+        
+        while(i < haystack.length())
+        {
+            
+            if(haystack.charAt(i) == needle.charAt(j))
+            {
+                if(j == needle.length()-1)
+                {
+                    startIndex = i-needle.length()+1;
+                    break;
+                }
+                else
+                {
+                    i++;
+                    j++;
+                    continue;
+                }
+            }
+            
+            if(haystack.charAt(i) != needle.charAt(j))
+            {
+                if(j == 0)
+                {
+                    i++;
+                    continue;
+                }
+                else
+                {
+                    j = array[j-1];
+                    continue;
+                }
+            }
+        }
+        
+        return startIndex;
+    }
+    
+    public int[] preProcessNeedle(String needle)
+    {
+        int[] dpArray = new int[needle.length()];
+        
+        dpArray[0] = 0;
+        
+        int j = 0;
+        int i = 1;
+        int dpIndex = 1;
+        
+        while(i < needle.length() && j < i)
+        {
+            if(needle.charAt(j) == needle.charAt(i))
+            {
+                dpArray[dpIndex] = j+1;
+                i++;
+                j++;
+                dpIndex++;
+                continue;
+            }
+            
+            if(needle.charAt(j) != needle.charAt(i))
+            {
+                if(j == 0)
+                {
+                    dpArray[dpIndex] = 0;
+                    i++;
+                    dpIndex++;
+                    continue;
+                }
+                else
+                {
+                    j = dpArray[j-1];
+                    continue;
+                }
+            }
+        }
+        
+       
+        
+        return dpArray;
+    }
+}

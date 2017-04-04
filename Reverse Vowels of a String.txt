@@ -1,0 +1,74 @@
+/*
+ *Write a function that takes a string as input and reverse only the vowels of a string.
+ *
+ *Example 1: 
+ *Given s = "hello", return "holle".
+ *
+ *Example 2: 
+ *Given s = "leetcode", return "leotcede"
+*/
+
+public class Solution {
+    public String reverseVowels(String s) {
+        
+        StringBuilder sb = new StringBuilder(s);
+        boolean leftFlag = false;
+        boolean rightFlag = false;
+        
+        int left = 0;
+        int right = sb.length()-1;
+        
+        while(left < right)
+        {
+            if(leftFlag && rightFlag)
+            {
+                swap(sb, left, right);
+                left++;
+                right--;
+                leftFlag = false;
+                rightFlag = false;
+                continue;
+            }
+            
+            if(sb.charAt(left) == 'a' || sb.charAt(left) == 'e' || sb.charAt(left) == 'i' || sb.charAt(left) == 'o' || sb.charAt(left) == 'u' || sb.charAt(left) == 'A' || sb.charAt(left) == 'E' || sb.charAt(left) == 'I' || sb.charAt(left) == 'O' || sb.charAt(left) == 'U')
+            {
+                leftFlag = true;
+                
+                if(rightFlag)
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                left++;
+            }
+            
+            if(sb.charAt(right) == 'a' || sb.charAt(right) == 'e' || sb.charAt(right) == 'i' || sb.charAt(right) == 'o' || sb.charAt(right) == 'u' || sb.charAt(right) == 'A' || sb.charAt(right) == 'E' || sb.charAt(right) == 'I' || sb.charAt(right) == 'O' || sb.charAt(right) == 'U')
+            {
+                rightFlag = true;
+                
+                if(leftFlag)
+                {
+                    continue;
+                }
+                
+            }
+            else
+            {
+                right--;
+            }
+            
+            
+        }
+        
+        return sb.toString();
+    }
+    
+    public void swap(StringBuilder sb, int src, int dest)
+    {
+        char temp = sb.charAt(src);
+        sb.replace(src, src+1, Character.toString(sb.charAt(dest)));
+        sb.replace(dest, dest+1, Character.toString(temp));
+    }
+}

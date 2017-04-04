@@ -1,0 +1,91 @@
+/*
+ *The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+ *
+ * P   A   H   N
+ * A P L S I I G
+ * Y   I   R
+ * And then read line by line: "PAHNAPLSIIGYIR"
+ *Write the code that will take a string and make this conversion given a number of rows:
+ *
+ * string convert(string text, int nRows);
+ * convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
+*/
+
+public class Solution {
+    public String convert(String s, int numRows) {
+        
+        List<StringBuilder> myList = new ArrayList<StringBuilder>();
+        if(numRows == 0 || s == null || s.length() == 0)
+        {
+            return "";
+        }
+        
+        if(numRows == 1)
+        {
+            return s;
+        }
+        
+        boolean up = true;
+        convertUtility(s, 0, myList, 0, numRows, up);
+        StringBuilder result = new StringBuilder();
+        
+        for(StringBuilder sb : myList)
+        {
+            result.append(sb);
+            System.out.println(sb.toString());
+        }
+        
+        return result.toString();
+    }
+    
+    public void convertUtility(String s, int listIndex, List<StringBuilder> myList, int charIndex, int numRows, boolean up)
+    {
+        if(charIndex == s.length())
+        {
+            return; 
+        }
+        
+        if(listIndex >= myList.size())
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append(s.charAt(charIndex));
+            myList.add(listIndex, sb);
+        }
+        else
+        {
+            StringBuilder sb = myList.get(listIndex);
+            sb.append(s.charAt(charIndex));
+            myList.remove(listIndex);
+            myList.add(listIndex, sb);
+        }
+        
+       
+        if(up == true)
+        {
+            if(listIndex+1 >= numRows)
+            {
+                listIndex--;
+                up = false;
+            }
+            else
+            {
+                listIndex++;
+            }
+        }
+        else
+        {
+            if(listIndex-1 == -1)
+            {
+                listIndex++;
+                up = true;
+            }
+            else
+            {
+                listIndex--;
+            }
+        }
+        
+        
+        convertUtility(s,listIndex, myList, charIndex+1, numRows, up);
+    }
+}

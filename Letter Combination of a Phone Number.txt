@@ -1,0 +1,44 @@
+/*
+ *Given a digit string, return all possible letter combinations that the number could represent.
+ *
+ *A mapping of digit to letters (just like on the telephone buttons) is given below.
+ *
+ * Input:Digit string "23"
+ * Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+ *
+*/
+
+public class Solution {
+    public List<String> letterCombinations(String digits) {
+        
+        String[] text = {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+        List<String> solution = new ArrayList<String>();
+        if(digits == null || digits.length() == 0)
+        {
+            return solution;
+        }
+        StringBuilder s = new StringBuilder();
+        letterCombinationsUtility(digits, text, solution, 0, s);
+        return solution;
+    }
+    
+    public void letterCombinationsUtility(String digits, String[] text, List<String> solution, int index, StringBuilder s)
+    {
+        if(index == digits.length())
+        {
+            solution.add(new String(s));
+            return;
+        }
+        
+        int i = index;
+        {
+            for(int j = 0; j < text[Integer.parseInt(Character.toString(digits.charAt(i)))].length(); j++)
+            {
+                s.append(text[Integer.parseInt(Character.toString(digits.charAt(i)))].charAt(j));
+                letterCombinationsUtility(digits, text, solution, index+1, s);
+                s.deleteCharAt(s.length()-1);
+            }
+            
+        }
+    }
+}

@@ -1,0 +1,100 @@
+/*
+ *Implement a trie with insert, search, and startsWith methods.
+ *
+ *Note:
+ *You may assume that all inputs are consist of lowercase letters a-z.
+*/
+
+class TrieNode {
+    // Initialize your data structure here.
+    Character ch;
+    HashMap<Character, TrieNode> nMap;
+    
+    public TrieNode(Character c) {
+  
+            ch = new Character(c);
+            nMap = new HashMap<Character, TrieNode>();
+ 
+    }
+}
+
+public class Trie {
+    private TrieNode root;
+    HashSet<String> TRIESET = new HashSet<String>();
+
+    public Trie() {
+        root = new TrieNode('*');
+    }
+
+    // Inserts a word into the trie.
+    public void insert(String word) {
+        int length = 0;
+        TrieNode node = root;
+        StringBuilder s = new StringBuilder();
+        
+        while(node != null &&  length < word.length())
+        {
+            s.append(word.charAt(length));
+            TRIESET.add(s.toString());
+            if(node.nMap.containsKey(word.charAt(length)))
+            {
+                node = node.nMap.get(word.charAt(length));
+                length++;
+                continue;
+            }
+            else
+            {
+                TrieNode newNode = new TrieNode(word.charAt(length));
+                node.nMap.put(word.charAt(length), newNode);
+                node = newNode;
+                length++;
+            }
+        }
+        
+        node.nMap.put('@', null);
+        System.out.println( word + " INSERTED");
+    
+    }
+
+    // Returns if the word is in the trie.
+    public boolean search(String word) {
+        
+        TrieNode node = root;
+        int length = 0;
+        
+        while(root != null && length < word.length())
+        {
+            if(node.nMap.containsKey(word.charAt(length)))
+            {
+                node = node.nMap.get(word.charAt(length));
+                length++;
+                continue;
+            }
+            return false;
+        }
+        
+        if(length == word.length() && node.nMap.containsKey('@')) {
+        return true; }
+        
+        return false;
+        
+        
+    }
+
+    // Returns if there is any word in the trie
+    // that starts with the given prefix.
+    public boolean startsWith(String prefix) {
+        
+        if(TRIESET.contains(prefix))
+        
+            return true;
+        else
+            return false;
+        
+    }
+}
+
+// Your Trie object will be instantiated and called as such:
+// Trie trie = new Trie();
+// trie.insert("somestring");
+// trie.search("key");

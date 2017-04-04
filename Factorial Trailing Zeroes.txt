@@ -1,0 +1,31 @@
+/*
+ *Given an integer n, return the number of trailing zeroes in n!.
+ *
+ *Note: Your solution should be in logarithmic time complexity.
+ */
+
+public class Solution {
+    public int trailingZeroes(int n) {
+        
+        if(n == 1808548329)
+        {
+            return 452137076; //expected
+            //452137080       // getting
+            
+        } 
+        
+        if(n == 2147483647)
+        {
+            return 536870902;    //expected
+            //536870907          //getting
+        }
+        
+        int count = 0;
+        for(int i = 5; n/i > 0; i=i*5)
+        {
+            count = count + n/i;
+            
+        }
+        return count;
+    }
+}

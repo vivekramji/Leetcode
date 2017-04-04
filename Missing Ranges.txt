@@ -1,0 +1,99 @@
+/*
+ *Given a sorted integer array where the range of elements 
+ *are [lower, upper] inclusive, return its missing ranges.
+ *
+ *For example, given [0, 1, 3, 50, 75], lower = 0 and upper = 99, 
+ *return ["2", "4->49", "51->74", "76->99"].
+*/
+
+public class Solution {
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        
+        
+        List<String> myList = new ArrayList<String>();
+        StringBuilder s = new StringBuilder();
+        
+        if(nums.length == 0)
+        {
+            if(lower != upper)
+            {
+                s.append(Integer.toString(lower));
+                s.append("->");
+                s.append(Integer.toString(upper));
+            }
+            else
+            {
+                s.append(Integer.toString(lower));
+            }
+            myList.add(s.toString());
+            s.setLength(0);
+            return myList;
+        }
+        
+        
+        int i = 0;
+        
+        if(nums[0] != lower)
+        {
+            s.append(Integer.toString(lower));
+            
+            if(nums[0] == lower + 1)
+            {
+                myList.add(s.toString());
+                s.setLength(0);
+            }
+            else
+            {
+                s.append("->");
+                s.append(Integer.toString(nums[0] - 1));
+                myList.add(s.toString());
+                s.setLength(0);
+            }
+        }
+        
+        for(i = 0 ; i < nums.length-1; i++)
+        {
+            if(nums[i] + 1 == nums[i+1])
+            {
+                continue;
+            }
+            
+            if(nums[i] + 2 == nums[i+1])
+            {
+                s.append(Integer.toString(nums[i]+1));
+                myList.add(s.toString());
+                s.setLength(0);
+                continue;
+            }
+            
+            if(i+1 < nums.length)
+            {
+                s.append(Integer.toString(nums[i]+1));
+                s.append("->");
+                s.append(Integer.toString(nums[i+1] - 1));
+                myList.add(s.toString());
+                s.setLength(0);
+                continue;
+            }
+            
+        }   
+        
+        if(nums[nums.length - 1] < upper)
+        {
+            if(nums[nums.length -1] + 1 == upper)
+            {
+                s.append(Integer.toString(upper));
+            }
+            else
+            {
+                s.append(Integer.toString(nums[nums.length - 1] + 1));
+                s.append("->");
+                s.append(Integer.toString(upper));
+                
+            }
+            myList.add(s.toString());
+        }
+        
+        return myList;
+    }
+}

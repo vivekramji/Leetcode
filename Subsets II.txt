@@ -1,0 +1,63 @@
+/*
+ *Given a collection of integers that might contain duplicates, nums, return all possible subsets.
+ *
+ *Note:
+ *Elements in a subset must be in non-descending order.
+ *The solution set must not contain duplicate subsets. 
+ *For example,
+ *If nums = [1,2,2], a solution is:
+ *
+ *[
+   [2],
+   [1],
+   [1,2,2],
+   [2,2],
+   [1,2],
+   []
+ *]
+ */
+
+public class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        
+        Arrays.sort(nums);
+        List<List<Integer>> mainSolution  = new ArrayList<List<Integer>>();
+        
+        mainSolution.add(new ArrayList<Integer>());
+        
+        List<List<Integer>> innerList = new ArrayList<List<Integer>>();
+        subsetsWithDupUtility(nums, 0, mainSolution, innerList);
+        
+        return mainSolution;
+        
+    }
+    
+    
+    public void subsetsWithDupUtility(int[] nums, int numIndex, List<List<Integer>> mainSolution, List<List<Integer>> innerList)
+    {
+        if(numIndex == nums.length)
+        {
+            return;
+        }
+        
+        for(List<Integer> i : mainSolution)
+        {
+            List<Integer> tempList = new ArrayList<Integer>(i);
+            tempList.add(nums[numIndex]);
+            
+            if(mainSolution.contains(tempList))
+            {
+                continue;
+            }
+            else
+            {
+                innerList.add(tempList);
+            }
+        }
+        
+        mainSolution.addAll(innerList);
+        innerList.clear();
+        
+        subsetsWithDupUtility(nums, numIndex+1, mainSolution, innerList);
+    }
+}

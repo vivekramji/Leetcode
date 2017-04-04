@@ -1,0 +1,54 @@
+/*
+ *Implement pow(x, n).
+ *
+ */
+
+
+public class Solution {
+    public double myPow(double x, int n) {
+        
+        boolean sign = false;
+        if(n < 0)
+        {
+            sign = true;
+            n = -1*n;
+        }
+        
+        
+        double answer = myPowHelper(x, n);
+        
+        if(sign == true)
+        {
+            return (double)(1/answer);
+        }
+        
+        return answer;
+        
+        
+        
+    }
+    
+    public double myPowHelper(double x, int n)
+    {
+        if(n == 0)
+        {
+            return 1.0;
+        }
+        
+        
+        
+        if(n == 1)
+        {
+            return x;
+        }
+        
+        double hold = myPow(x, n/2);
+        
+        if(n%2 == 0)
+        {
+            return hold*hold;
+        }
+        
+        return hold*hold*x;
+    }
+}

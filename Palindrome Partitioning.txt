@@ -1,0 +1,63 @@
+/*
+ *Given a string s, partition s such that every substring of the partition is a palindrome.
+ *
+ *Return all possible palindrome partitioning of s.
+ *
+ *	For example, given s = "aab",
+ *	Return
+ *
+ *	[
+ *  		["aa","b"],
+ *  		["a","a","b"]
+ *	]
+ */
+
+public class Solution {
+    public List<List<String>> partition(String s) {
+        
+        boolean[][] dpArray = new boolean[s.length()][s.length()];
+		
+		for(int i = 0; i < s.length(); i++)
+		{
+			dpArray[i][i] = true;
+		}
+		
+		 for(int length = 2; length <= s.length(); length++)
+		 {
+		 	for(int i = 0; i <= s.length() - length; i++)
+		 	{
+		 		if((s.charAt(i) == s.charAt(i+length-1) && (i+1 > i+length - 2 || dpArray[i+1][i+length-2])) || (s.charAt(i) == s.charAt(i+length-1) && i == i+length-2))
+		 		{
+		 			dpArray[i][i+length-1] = true;
+		 			continue;
+		 		}
+		 		
+		 	}
+		 }
+		 
+		 List<List<String>> solution = new ArrayList<List<String>>();
+		 List<String> inList = new ArrayList<String>();
+		 finalLength(s, dpArray, inList, 0, solution);
+		 return solution;
+        
+    }
+    
+    public void finalLength(String s, boolean[][] dpArray, List<String> inList, int index, List<List<String>> solution)
+	{
+		if(index == s.length())
+		{
+			solution.add(new ArrayList<String>(inList));
+			return;
+		}
+		
+	    for(int i = index; i < s.length(); i++)
+	    {
+	    	if(dpArray[index][i])
+	    	{
+	    		inList.add(s.substring(index, i+1));
+	    		finalLength(s, dpArray, inList, i+1, solution);
+	    		inList.remove(inList.size()-1);
+	    	}
+	    }
+	}
+}

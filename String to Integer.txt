@@ -1,0 +1,105 @@
+/*
+ *mplement atoi to convert a string to an integer.
+ *
+ *Hint: Carefully consider all possible input cases. If you want a challenge, please do not see below and ask yourself what are the possible input cases.
+ *
+ *Notes: It is intended for this problem to be specified vaguely (ie, no given input specs). You are responsible to gather all the input requirements up front.
+ *
+ ****VIVEK RAMJI****
+ */
+
+public class Solution {
+    public int myAtoi(String str) {
+        
+        if(str.length() == 0)
+         {
+            return 0;
+         }
+    
+    
+    
+    HashMap<Character, Integer> myMap = new HashMap<Character, Integer>();
+        
+        myMap.put('0', 0);
+        myMap.put('1', 1);
+        myMap.put('2', 2);
+        myMap.put('3', 3);
+        myMap.put('4', 4);
+        myMap.put('5', 5);
+        myMap.put('6', 6);
+        myMap.put('7', 7);
+        myMap.put('8', 8);
+        myMap.put('9', 9);
+        
+        
+        int i = 0;
+        boolean startFlag = false;
+        int sign = 1;
+        double answer = 0;
+        
+        while( i < str.length())
+        {
+            if(str.charAt(i) == ' ' && startFlag == false)
+            {
+                i++;
+                continue;
+            }
+            
+            if(str.charAt(i) == '-' && startFlag == false)
+            {
+                sign = -1;
+                startFlag = true;
+                i++; continue;
+            }
+            
+            if(str.charAt(i) == '+' && startFlag == false)
+            {
+                i++;
+                startFlag = true;
+                continue;
+            }
+            
+            if(myMap.containsKey(str.charAt(i)) && startFlag == false)
+            {
+                startFlag = true;
+                answer = (answer*10) + myMap.get(str.charAt(i));
+                i++;
+                continue;
+            }
+            
+        
+            
+            if(startFlag == true && myMap.containsKey(str.charAt(i)))
+            {
+                answer = (answer*10) + myMap.get(str.charAt(i));
+                if(answer > Integer.MAX_VALUE && sign == 1)
+                {
+                    answer = Integer.MAX_VALUE;
+                    break;
+                }
+                else
+                if(answer < Integer.MIN_VALUE && sign == -1)
+                {
+                    answer = Integer.MIN_VALUE*(-1);
+                    break;
+                }
+                i++;
+                continue;
+            }
+            else
+            {
+                startFlag = false;
+                break;
+            }
+            
+            
+        }
+        
+        if(answer != 0) {
+        return(int)(sign*answer);
+        }
+        
+        return (int)answer;
+        
+    }
+}

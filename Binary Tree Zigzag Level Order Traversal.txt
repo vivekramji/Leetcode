@@ -1,0 +1,83 @@
+/*
+ *Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
+ *
+ *For example:
+ * Given binary tree {3,9,20,#,#,15,7},
+    3
+   / \
+  9  20
+    /  \
+   15   7
+ *return its zigzag level order traversal as:
+ * [
+    [3],
+    [20,9],
+    [15,7] 
+   ]
+*/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        
+        List<List<Integer>> solution = new ArrayList<List<Integer>>();
+        Queue<TreeNode> myQ = new LinkedList<TreeNode>();
+        myQ.offer(root);
+        boolean R2L = true;
+        zigzagUtility(solution, root, myQ, R2L);
+        
+        return solution;
+        
+    }
+    
+    public void zigzagUtility(List<List<Integer>> solution, TreeNode root, Queue<TreeNode> myQ, boolean R2L)
+    {
+        if(root == null)
+        {
+            return;
+        }
+        
+        while(!myQ.isEmpty())
+        {
+            int size = myQ.size();
+            Integer[] array = new Integer[size];
+            
+            for(int i = 0; i < size; i++)
+            {
+                TreeNode node = myQ.poll();
+                if(R2L == false)
+                {
+                    array[size-i-1] = node.val;
+                    
+                }
+                else
+                {
+                    array[i] = node.val;
+                    
+                }
+                
+                if(node.left != null)
+                {
+                    myQ.offer(node.left);
+                }
+                
+                if(node.right != null)
+                {
+                    myQ.offer(node.right);
+                }
+            }
+            
+            R2L = !R2L;
+            List<Integer> newList = Arrays.asList(array);
+            solution.add(newList);
+        }
+    }
+}

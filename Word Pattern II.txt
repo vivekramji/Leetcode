@@ -1,0 +1,77 @@
+/*
+ *Given a pattern and a string str, find if str follows the same pattern.
+ *
+ *Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty substring in str.
+ *
+ *Examples:
+ *pattern = "abab", str = "redblueredblue" should return true.
+ *pattern = "aaaa", str = "asdasdasdasd" should return true.
+ *pattern = "aabb", str = "xyzabcxzyabc" should return false.
+ *Notes:
+ *You may assume both pattern and str contains only lowercase letters.
+*/
+
+public class Solution {
+    public boolean wordPatternMatch(String pattern, String str) {
+        
+        if(pattern == null && str != null || str == null && pattern != null)
+        {
+            return false;
+        }
+        Map<Character, String> myMap = new HashMap<Character, String>();
+        Set<String> mySet = new HashSet<String>();
+        return wordPatternUtility(pattern, 0, str, 0, myMap, mySet);
+    }
+    
+    public boolean wordPatternUtility(String pattern, int patternIndex, String str, int strIndex, Map<Character, String> myMap, Set<String> mySet)
+    {
+        if(patternIndex == pattern.length() && strIndex == str.length())
+        {
+            return true;
+        }
+        else
+        if(patternIndex == pattern.length() && strIndex != str.length() || patternIndex != pattern.length() && strIndex == str.length())
+        {
+            return false;
+        }
+        
+        for(int i = strIndex+1; i <= str.length(); i++)
+        {
+            if(myMap.containsKey(pattern.charAt(patternIndex)))
+            {
+                String s = myMap.get(pattern.charAt(patternIndex));
+                
+                if(strIndex+s.length() <= str.length() && str.substring(strIndex, strIndex+s.length()).equals(s))
+                {
+                    return wordPatternUtility(pattern, patternIndex+1, str, strIndex+s.length(), myMap, mySet);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if(mySet.contains(str.substring(strIndex, i)))
+                {
+                    continue;
+                }
+                myMap.put(pattern.charAt(patternIndex), str.substring(strIndex, i));
+                mySet.add(str.substring(strIndex, i));
+                if(wordPatternUtility(pattern, patternIndex+1, str, i, myMap, mySet))
+                {
+                    return true;
+                }
+                else
+                {
+                    myMap.remove(pattern.charAt(patternIndex));
+                    mySet.remove(str.substring(strIndex, i));
+                    continue;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+}

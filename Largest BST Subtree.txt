@@ -1,0 +1,113 @@
+/*
+ *Given a binary tree, find the largest subtree which is a Binary Search Tree (BST), where largest means subtree with largest number of nodes in it.
+ *
+ *Note:
+ *A subtree must include all of its descendants.
+ *Here's an example:
+    10
+    / \
+   5  15
+  / \   \ 
+ 1   8   7
+ *The Largest BST Subtree in this case is the highlighted one. 
+ *The return value is the subtree's size, which is 3.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    
+    int solution = 0;
+    class Result{
+        boolean isBST;
+        int size;
+        int min;
+        int max;
+        
+        Result(){
+            isBST = true;
+            size = 0;
+            min = Integer.MAX_VALUE;
+            max = Integer.MIN_VALUE;
+        }
+    }
+    
+    public Result largestBSTUtility(TreeNode root)
+    {
+        if(root == null)
+        {
+            return new Result();
+        }
+        
+        Result leftResult = largestBSTUtility(root.left);
+        Result rightResult = largestBSTUtility(root.right);
+        
+        if(leftResult.isBST == false || rightResult.isBST == false)
+        {
+            Result newResult = new Result();
+            newResult.isBST = false;
+            newResult.size = Math.max(leftResult.size, rightResult.size);
+            
+            if(newResult.size > solution)
+            {
+                solution = newResult.size;
+            }
+            
+            return newResult;
+        }
+        
+        Result newResult = new Result();
+        
+        if(root.val > leftResult.max && root.val < rightResult.min)
+        {
+            newResult.isBST = true;
+            newResult.size = leftResult.size + rightResult.size + 1;
+            
+            if(leftResult.max == Integer.MIN_VALUE)
+            {
+                newResult.min = root.val;
+            }
+            else
+            {
+                newResult.min = leftResult.min;
+            }
+            
+            if(rightResult.min == Integer.MAX_VALUE)
+            {
+               newResult.max = root.val;
+            }
+            else
+            {
+               newResult.max = rightResult.max; 
+            }
+        }
+        else
+        {
+            newResult.isBST  = false;
+            newResult.size = Math.max(leftResult.size, rightResult.size);
+            
+        }
+        
+        if(newResult.size > solution)
+        {
+            solution = newResult.size;
+        }
+        
+        return newResult;
+    }
+    
+    public int largestBSTSubtree(TreeNode root) {
+        
+        
+        Result answer = largestBSTUtility(root);
+        //System.out.println(answer.size);
+        return solution;
+    }
+}

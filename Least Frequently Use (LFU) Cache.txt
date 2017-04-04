@@ -1,0 +1,119 @@
+/*
+ *Design and implement a data structure for Least Frequently Used (LFU) cache. It should support the  *following operations: get and set.
+ *
+ *get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise  *return -1.
+ *set(key, value) - Set or insert the value if the key is not already present. When the cache reaches its  *capacity, it should invalidate the least frequently used item before inserting a new item. For the  *purpose of this problem, when there is a tie (i.e., two or more keys that have the same frequency), the  *least recently used key would be evicted.
+*/
+
+public class LFUCache {
+    DLL cache;
+    Map<Integer, DLLNode> myMap = new HashMap<Integer, DLLNode>();
+    int currentCapacity;
+    int maxCapacity;
+    
+    class DLLNode {
+        Integer val;
+        Integer key;
+        DLLNode next;
+        DLLNode prev;
+        
+        DLLNode(int k, int v)
+        {
+            key = k;
+            val = v;
+            next = null;
+            prev = null;
+        }
+        DLLNode()
+        {
+            key = null;
+            val = null;
+            next = null;
+            prev = null;
+        }
+        
+    }
+    
+    class DLL{
+        DLLNode dummyFirst = new DLLNode();
+        DLLNode dummyLast = new DLLNode();
+        
+        DLL()
+        {
+            dummyFirst.next = dummyLast;
+            dummyLast.prev = dummyFirst;
+        }
+    }
+    
+    public LFUCache(int capacity) {
+        cache = new DLL();
+        currentCapacity = 0;
+        maxCapacity = capacity;
+    }
+    
+    public int get(int key) {
+        if(myMap.containsKey(key))
+        {
+           DLLNode node = myMap.get(key);
+           pushToFirst(node);
+           return node.val;
+        }
+        return -1;
+    }
+    
+    public void set(int key, int value) {
+        if(myMap.containsKey(key))
+        {
+            DLLNode node = myMap.get(key);
+            node.val = value;
+            pushToFirst(node);
+        }
+        else
+        {
+            if(!(currentCapacity < maxCapacity))
+            {
+               deleteLastNode();
+            }
+            DLLNode node = new DLLNode(key, value);
+            myMap.put(key, node);
+            node.prev = cache.dummyFirst;
+            node.next = cache.dummyFirst.next;
+            cache.dummyFirst.next = node;
+            node.next.prev = node;
+            currentCapacity++;
+        }
+        
+    }
+    
+    public void deleteLastNode()
+    {
+        if(currentCapacity < 1)
+        {
+            return;
+        }
+        DLLNode deleteNode = cache.dummyLast.prev;
+        myMap.remove(deleteNode.key);
+        deleteNode.prev.next = deleteNode.next;
+        deleteNode.next.prev = deleteNode.prev;
+        deleteNode.prev = null;
+        deleteNode.next = null;
+        currentCapacity--;
+    }
+    
+    public void pushToFirst(DLLNode node)
+    {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        node.prev = cache.dummyFirst;
+        node.next = cache.dummyFirst.next;
+        cache.dummyFirst.next = node;
+        node.next.prev = node;
+    }
+}
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache obj = new LFUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.set(key,value);
+ */

@@ -1,0 +1,105 @@
+/*
+
+Write a program to find the node at which the intersection of two singly linked lists begins
+
+Notes:
+
+If the two linked lists have no intersection at all, return null.
+The linked lists must retain their original structure after the function returns.
+You may assume there are no cycles anywhere in the entire linked structure.
+Your code should preferably run in O(n) time and use only O(1) memory.
+
+
+***VIVEK RAMJI***
+
+*/
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    
+    
+    public int findLength(ListNode head)
+    {
+        int count = 0;
+        
+        while(head != null)
+        {
+            count++;
+            head = head.next;
+        }
+        return count;
+    }
+    
+    public ListNode getIntersection(ListNode headX, ListNode headY, int difference)
+    {
+        while(difference != 0)
+        {
+            headX = headX.next;
+            difference--;
+        }
+        
+        
+        while(headX!= null && headY != null)
+        {
+            if(headX == headY)
+            {
+                return headX;
+            }
+            else
+            {
+                headX = headX.next;
+                headY = headY.next;
+            }
+        }
+        return null;
+    }
+    
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        
+        int lengthA = findLength(headA);
+        int lengthB = findLength(headB);
+        int difference = 0;
+        ListNode answer = null;
+        
+        if(lengthA == 0 && lengthB != 0)
+        {
+            
+            return answer;
+        }
+        
+        if(lengthB == 0 && lengthA != 0)
+        {
+            
+            return answer;
+        }
+        
+        if(lengthA ==0 && lengthB == 0)
+        {
+            return null;
+        }
+        
+        
+        if(lengthA < lengthB)
+        {
+            difference = lengthB - lengthA;
+            answer = getIntersection(headB, headA, difference);
+        }
+        else
+        {
+           difference = lengthA-lengthB;
+           answer = getIntersection(headA, headB, difference);
+        }
+        
+       return answer; 
+    }
+}

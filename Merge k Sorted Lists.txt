@@ -1,0 +1,69 @@
+/*
+ *Merge k sorted linked lists and return it as one sorted list.
+ * Analyze and describe its complexity.
+ */
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+
+public class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        
+        if(lists == null || lists.length == 0)
+        {
+            return null;
+        }
+        
+        ListNode dummySolutionHead = new ListNode(0);
+        ListNode tail = dummySolutionHead;
+        
+        PriorityQueue<ListNode> pq = new PriorityQueue<ListNode>(new Comparator<ListNode>(){
+            
+            public int compare(ListNode l1, ListNode l2)
+            {
+                if(l1.val < l2.val)
+                {
+                    return -1;
+                }
+                
+                if(l1.val > l2.val)
+                {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+        
+        for(ListNode n : lists)
+        {
+            if(n != null)
+            {
+                pq.offer(n);
+            }
+        }
+        
+        
+        while(!pq.isEmpty())
+        {
+            ListNode node = pq.poll();
+            
+            if(node != null)
+            {
+                tail.next = node;
+                tail = tail.next;
+                
+                if(tail.next != null)
+                {
+                    pq.offer(tail.next);
+                }
+            }
+        }
+     return dummySolutionHead.next;
+    }
+}

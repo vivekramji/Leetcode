@@ -1,0 +1,103 @@
+/*
+ *Given a n x n matrix where each of the rows and columns are sorted in ascending order, find the kth smallest  *element in the matrix.
+ *
+ *Note that it is the kth smallest element in the sorted order, not the kth distinct element.
+ *
+ *Example:
+ *
+ matrix = [
+   [ 1,  5,  9],
+   [10, 11, 13],
+   [12, 13, 15]
+],
+k = 8,
+
+return 13.
+ *Note: 
+ *You may assume k is always valid, 1 = k = n2.
+*/
+
+public class Solution {
+    
+    public class QueueObject {
+        int val;
+        int x;
+        int y;
+        
+        QueueObject(int v, int ex, int why)
+        {
+            val = v;
+            x = ex;
+            y = why;
+        }
+    }
+    
+    
+    public int kthSmallest(int[][] matrix, int k) {
+        
+        PriorityQueue<QueueObject> minHeap = new PriorityQueue<QueueObject>(new Comparator<QueueObject>(){
+            public int compare(QueueObject a, QueueObject b)
+            {
+                if(a.val <= b.val)
+                {
+                    return -1;
+                }
+                return 1;
+            }
+        });
+        
+        for(int i = 0; i < matrix[0].length; i++)
+        {
+            QueueObject obj = new QueueObject(matrix[0][i], 0, i);
+            minHeap.add(obj);
+        }
+        
+        for(int i = 0; i < k-1; i++)
+        {
+            QueueObject obj = minHeap.poll();
+            int row = obj.x;
+            int col = obj.y;
+            
+            row++;
+            
+            if(row <= matrix.length-1)
+            {
+               QueueObject newObj = new QueueObject(matrix[row][col], row, col);
+               minHeap.add(newObj);
+            }
+            else
+            {
+               QueueObject newObj = new QueueObject(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+               minHeap.add(newObj);
+            }
+        }
+        
+        QueueObject answer = minHeap.poll();
+        return answer.val;
+    }
+}
+
+--------------------------------------------------------------------------------------
+
+/*Alternate Solution using a separate class to override the 
+ *comparator of the Priority Queue
+*/
+
+
+public class QueueSort implements Comparator<QueueObject>{
+
+	public int compare(QueueObject a, QueueObject b)
+	{
+		if(a.val <= b.val) { return -1;} else return 1;
+	}
+}
+
+public class Solution {
+
+	public int kthSmallestElement(int[][] matrix, int k)
+	{
+	   
+	   QueueSort qs = new QueueSort();
+	   PriorityQueue<QueueObject> minHeap = new PriorityQueue<QueueObject>(10,qs);
+	}
+}

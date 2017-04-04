@@ -1,0 +1,63 @@
+/*
+ *
+ *Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+ *
+ *For example,
+ * [1,1,2] have the following unique permutations:
+ * [1,1,2], [1,2,1], and [2,1,1].
+*/
+
+public class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        
+        List<List<Integer>> solution = new ArrayList<List<Integer>>();
+        
+        if(nums == null || nums.length == 0)
+        {
+            return solution;
+        }
+        
+        List<Integer> inner = new ArrayList<Integer>();
+        inner.add(nums[0]);
+        solution.add(inner);
+        
+         List<List<Integer>> realSolution = permuteUtility(nums, solution, 1);
+         
+         return realSolution;
+    }
+    
+    public List<List<Integer>> permuteUtility(int[] nums, List<List<Integer>> solution, int index)
+    {
+        if(index == nums.length)
+        {
+            return solution;
+        }
+        
+        List<List<Integer>> solTemp = new ArrayList<List<Integer>>();
+        for(List<Integer> i : solution)
+        {
+            for(int j = 0; j <= i.size(); j++)
+            {
+                if(j == 0 || (j > 0 && i.get(j-1) != nums[index]))
+                {
+                    i.add(j, nums[index]);
+                    
+                    if(!solTemp.contains(i)) {
+                        solTemp.add(new ArrayList<Integer>(i));
+                    }
+                    i.remove(j);
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+        
+        System.out.println(solTemp);
+        
+        return permuteUtility(nums, solTemp, index+1 );
+        
+        
+    }
+}

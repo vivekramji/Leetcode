@@ -1,0 +1,135 @@
+/*
+ * Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+ *
+ *The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
+ * 
+ ***VIVEK RAMJI***
+ */
+
+
+
+public class Solution {
+    class Node{
+    char x;
+    Node next;
+    
+    Node(char x)
+    {
+        this.x = x;
+        this.next = null;
+    }
+    
+    char getNodeValue()
+    {
+        return x;
+    }
+    
+    Node getNextNode()
+    {
+        return this.next;
+    }
+    
+    void setNodeValue(char x)
+    {
+        this.x = x;
+    }
+    
+    void setNextNode(Node n)
+    {
+        this.next = n;
+    }
+}
+
+public class Stack{
+    Node StackHead;
+    Stack()
+    {
+        StackHead = null;
+    }
+    
+    void setStackHead(Node n)
+    {
+        this.StackHead = n;
+    }
+    
+    Node getStackHead()
+    {
+        return this.StackHead;
+    }
+    
+    void push(char x)
+    {
+        Node n = new Node(x);
+        n.next = StackHead;
+        StackHead = n;
+        System.out.println("Pushed : " + x);
+    }
+    
+    Node pop()
+    {
+        if(!isEmpty())
+        {
+          Node n = getStackHead();
+          System.out.println("Popped : " + n.x);
+           
+             StackHead = n.next;
+           
+          return n;
+        }
+        return null;
+    }
+    
+    boolean isEmpty()
+    {
+        if(getStackHead() == null)
+        return true;
+        else
+        return false;
+    }
+}
+
+
+    public boolean isValid(String s) {
+        if(s.length() == 0 || s.length() == 1)
+        {
+            return false;
+        }
+        Stack q = new Stack();
+        Node match = null;
+        for(int i = 0; i<s.length(); i++)
+        {
+            if(s.charAt(i) == '(' || s.charAt(i) == '{' || s.charAt(i) == '[')
+            {
+               q.push(s.charAt(i));
+            }
+            else
+            {
+                match = q.pop();
+                if(match != null)
+                {
+                    if((s.charAt(i) == ')' && match.x == '(') ||
+                        (s.charAt(i) == '}' && match.x == '{') ||
+                          (s.charAt(i) == ']' && match.x == '['))
+                     {
+                         System.out.println("3");
+                              continue;
+                     }
+                     else
+                     {
+                         return false;
+                     }
+               
+                }
+                else
+                {
+                    System.out.println("2");
+                   return false;
+                }
+            }
+        }
+        System.out.println("1");
+        return (q.isEmpty());
+        
+    }
+}
+ 

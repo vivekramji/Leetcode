@@ -1,0 +1,74 @@
+/*
+  Given an array and a value, remove all instances of that value in place
+  and return the new length.
+
+The order of elements can be changed. It doesn't matter what you leave
+ beyond the new length.
+
+*****VIVEK RAMJI*****
+
+*/
+
+public class Solution {
+    public int removeElement(int[] nums, int val) {
+        
+        
+        int size = nums.length;
+        
+        
+        if(size == 0)
+        {
+            return 0;
+        }
+        
+        if(size == 1 && nums[0] == val)
+        {
+            return 0;
+        }
+        
+        int i = 0;
+        int j = size-1;
+        int newSize = 0;
+        
+        while(i < j)
+        {
+            if(nums[i] == val)
+            {
+                swap(nums, i, j);
+                j--;
+                continue;
+            }
+            else
+            {
+                i++;
+                continue;
+            }
+        }
+        
+        for(i = 0; i < size; i++)
+        {
+            if(nums[i] != val)
+            {
+                newSize++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        
+        
+        
+        
+        return newSize;
+        
+    }
+    
+    public void swap(int[] nums, int i, int j)
+    {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+  
+}

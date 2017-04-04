@@ -1,0 +1,41 @@
+/*
+
+Given an array of size n, find the majority element. The majority element 
+is the element that appears more than CEIL( n/2 ) times.
+You may assume that the array is non-empty and the majority element always 
+exist in the array.
+
+*****VIVEK RAMJI*****
+
+*/
+
+public class Solution {
+    public int majorityElement(int[] nums) {
+        HashMap<Integer, Integer> myMap = new HashMap<Integer, Integer>();
+        
+        if(nums.length == 1)
+        {
+            return nums[0];
+        }
+        int answer = -1;
+        for(int i = 0; i < nums.length; i++)
+        {
+            if(myMap.containsKey(nums[i]))
+            {
+                int x = myMap.get(nums[i]);
+                x++;
+                myMap.put(nums[i], x);
+                
+                if(x > (nums.length/2))
+                {
+                    answer = nums[i];
+                }
+            }
+            else
+            {
+                myMap.put(nums[i], 1);
+            }
+        }
+       return answer; 
+    }
+}

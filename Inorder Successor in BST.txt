@@ -1,0 +1,87 @@
+/*
+ *Given a binary search tree and a node in it, find the in-order successor of that node in the BST.
+ *
+ *Note: If the given node has no in-order successor in the tree, return null.
+ */
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        
+        if(root == null)
+        {
+            return null;
+        }
+        
+        Map<TreeNode, TreeNode> parentMap = new HashMap<TreeNode, TreeNode>();
+        
+        TreeNode parent = findParent(root, p, null, parentMap);
+        TreeNode ioS = inOrderS(root, p, parent, parentMap);
+        return ioS;
+    }
+    
+    public TreeNode inOrderS(TreeNode root, TreeNode p, TreeNode parent, Map<TreeNode, TreeNode> parentMap)
+    {
+        if(p.right!= null)
+        {
+            TreeNode temp = p.right;
+            while(temp.left != null)
+            {
+                temp = temp.left;
+            }
+            
+            return temp;
+        }
+        else
+        {
+            if(parent != null && parent.left == p)
+            {
+                return parent;
+            }
+            else
+            {
+                while(parentMap.get(parent) != null)
+                {
+                    p = parent;
+                    parent = parentMap.get(parent);
+                    if(parent.left == p)
+                    {
+                        return parent;
+                    }
+                    
+                }
+                
+                
+            }
+            
+        }
+        
+        return null;
+        
+        
+    }
+    
+    public TreeNode findParent(TreeNode root, TreeNode node, TreeNode parent, Map<TreeNode, TreeNode> parentMap)
+    {
+        parentMap.put(root, parent);
+        if(node.val == root.val)
+        {
+            return parent;
+        }
+        
+        if(node.val < root.val)
+        {
+            return findParent(root.left, node, root, parentMap);
+        }
+        
+        return findParent(root.right, node, root, parentMap);
+    }
+}
