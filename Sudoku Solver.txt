@@ -1,0 +1,176 @@
+/*
+ *Write a program to solve a Sudoku puzzle by filling the empty cells.
+ *
+ *Empty cells are indicated by the character '.'.
+ *
+ *You may assume that there will be only one unique solution.
+ * GET THE FULL DESCRIPTION OF THE QUESTION HERE : https://leetcode.com/problems/sudoku-solver/#/description
+*/
+
+
+
+public class Solution {
+    public void solveSudoku(char[][] board) {
+        boolean val = solveSudokuHelper(board);
+        if(val)
+        {
+            return;
+        }
+    }
+    
+    public boolean solveSudokuHelper(char[][] board)
+    {
+        if(isSolved(board))
+        {
+            return true;
+        }
+        
+        int[] space = getFirstBlankSpace(board);
+        HashSet<Character> allowed = new HashSet<Character>(Arrays.asList('1', '2', '3', '4', '5', '6', '7', '8', '9'));
+        eliminateFromRow(space[0], allowed, board);
+        eliminateFromCol(space[1], allowed, board);
+        eliminateSub((space[0]/3) * 3, (space[1]/3) * 3, allowed, board);
+        
+        for(Character c : allowed)
+        {
+            board[space[0]][space[1]] = c;
+            boolean solved = solveSudokuHelper(board);
+            if(solved)
+            {
+                return  true;
+            }
+            board[space[0]][space[1]] = '.';
+        }
+        return false;
+    }
+    
+    public void eliminateFromRow(int row, HashSet<Character> allowed, char[][] board)
+    {
+        for(int col = 0; col < 9; col++)
+        {
+            if(allowed.contains(board[row][col]))
+            {
+                allowed.remove(board[row][col]);
+            }
+        }
+    }
+    public void eliminateFromCol(int col, HashSet<Character> allowed, char[][] board)
+    {
+        for(int row = 0; row < 9; row++)
+        {
+            if(allowed.contains(board[row][col]))
+            {
+                allowed.remove(board[row][col]);
+            }
+        }
+    }
+    public void eliminateSub(int row, int col, HashSet<Character> allowed, char[][] board)
+    {
+        for(int r = row; r < row+3; r++)
+        {
+            for(int c = col; c < col+3; c++)
+            {
+                if(allowed.contains(board[r][c]))
+                {
+                    allowed.remove(board[r][c]);
+                }
+            }
+        }
+    }
+    
+    public boolean isSolved(char[][] board)
+    {
+        int[] blankSpace = getFirstBlankSpace(board);
+        if(blankSpace != null)
+        {
+            return false;
+        }
+        
+        for(int k = 0; k < 8; k++)
+        {
+            for(char num = '1'; num <= '9'; num++)
+            {
+                boolean boolRow = isNumPresentInRowK(board, num, k);
+                if(!boolRow)
+                {
+                    return false;
+                }
+                boolean boolCol = isNumPresentInColK(board, num, k);
+                if(!boolCol)
+                {
+                    return false;
+                }
+            }
+        }
+        
+        for(int row = 0; row < 7; row+=3)
+        {
+            for(int col = 0; col < 7; col+=3)
+            {
+                for(char num = '1'; num <= '9'; num++)
+                {
+                    if(!subsquareContains(row, col, num, board))
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
+    public boolean subsquareContains(int row, int col, char num, char[][] board)
+    {
+        for(int r = row; r < row+3; r++)
+        {
+            for(int c = col; c < col+3; c++)
+            {
+                if(board[r][c] == num)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public int[] getFirstBlankSpace(char[][] board)
+    {
+        for(int row = 0; row < board.length; row++)
+        {
+            for(int col = 0; col < board[0].length; col++)
+            {
+                if(board[row][col] == '.')
+                {
+                    int[] arr = {row, col};
+                    return arr;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public boolean isNumPresentInRowK(char[][] board, char num, int k)
+    {
+        for(int col = 0; col < 10; col++)
+        {
+            if(board[k][col] == num)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isNumPresentInColK(char[][] board, char num, int k)
+    {
+        for(int row = 0; row < 10; row++)
+        {
+            if(board[row][k] == num)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
