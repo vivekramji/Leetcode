@@ -1,0 +1,115 @@
+/*
+Count of Smaller Numbers After Self
+DescriptionHintsSubmissionsSolutions
+Discuss   Editorial Solution Pick One
+You are given an integer array nums and you have to return a new counts array. The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].
+
+Example:
+
+Given nums = [5, 2, 6, 1]
+
+To the right of 5 there are 2 smaller elements (2 and 1).
+To the right of 2 there is only 1 smaller element (1).
+To the right of 6 there is 1 smaller element (1).
+To the right of 1 there is 0 smaller element.
+Return the array [2, 1, 1, 0].
+
+NOTE : DOES NOT HANDLE DUPLICATES. 
+      ***FEEL FREE TO CLONE, FIX***
+*/
+
+public class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        ArrayList<Integer> answer = new ArrayList<Integer>(Collections.nCopies(nums.length, 0));
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        int[] temp = new int[nums.length];
+        for(int i = 0; i < nums.length; i++)
+        {
+            map.put(nums[i], i);
+        }
+        mergeSort(nums, 0, nums.length-1, answer, map, temp);
+        return answer;
+    }
+    
+    public void mergeSort(int[] nums, int start, int end, ArrayList<Integer> answer, HashMap<Integer, Integer> map, int[] temp)
+    {
+        if(start >= end)
+        {
+            return;
+        }
+        int mid = start + (end-start)/2;
+        mergeSort(nums, start, mid, answer, map, temp);
+        mergeSort(nums, mid+1, end, answer, map, temp);
+        merge(nums, start, mid, end, temp, answer, map);
+    }
+    
+    public void merge(int[] nums, int start, int mid, int end, int[] temp, ArrayList<Integer> answer, HashMap<Integer, Integer> map)
+    {
+        
+        for(int i = start; i <= mid; i++)
+        {
+            int lastSmallestIdx = binarySearch(nums, nums[i], mid+1, end);
+            int val = answer.get(map.get(nums[i])) + (lastSmallestIdx - (mid+1) + 1);
+            answer.set(map.get(nums[i]), val);
+        }
+        int i = start;
+        int j = mid+1;
+        int k = 0;
+        while(i <= mid && j <= end)
+        {
+            if(nums[i] < nums[j])
+            {
+                temp[k++] = nums[i++];
+                continue;
+            }
+            if(nums[i] > nums[j])
+            {
+                temp[k++] = nums[j++];
+                continue;
+            }
+            else
+            {
+                temp[k++] = nums[i++];
+                temp[k++] = nums[j++];
+            }
+        }
+        
+        while(i<=mid)
+        {
+            temp[k++] = nums[i++];
+        }
+        while(j <= end)
+        {
+            temp[k++] = nums[j++];
+        }
+        for(int z = 0; z< k; z++)
+        {
+            nums[start++] = temp[z];
+        }
+    }
+    
+    public int binarySearch(int[] array, int key, int start, int end)
+    {
+        if(array[start] > key) return start-1;
+        if(array[end] < key) return end;
+        int s = start;
+        int e = end;
+        while(s <= e)
+        {
+            int mid = s + (e-s)/2;
+            if(array[mid] < key && array[mid+1] >= key)
+            {
+                return mid;
+            }
+            if(array[mid] < key && array[mid+1] < key)
+            {
+                s = mid+1; continue;
+            }
+            if(array[mid] >= key)
+            {
+                e = mid-1; continue;
+            }
+        }
+        return start-1;
+    } 
+}
